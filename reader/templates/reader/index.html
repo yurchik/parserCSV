@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter your file</title>
+</head>
+<body>
+    <h2></h2>
+    <form action="{% url 'reader:diagram' %}" method="post" datatype="application/file">
+        {% csrf_token %}
+        <input id="filename" type="file" name="file"/>
+        <label for="filename">Choose your .csv file</label><br>
+        <input type="hidden" name="region_id" value="0"/>
+        <input type="submit" name="btn" value="PARSE"/>
+    </form>
+</body>
+</html>
