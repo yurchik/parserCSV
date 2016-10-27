@@ -6,12 +6,15 @@
 </head>
 <body>
     <h2></h2>
-    <form action="{% url 'reader:diagram' %}" method="post" datatype="application/file">
+    <form action="{% url 'reader:parse' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input id="filename" type="file" name="file"/>
-        <label for="filename">Choose your .csv file</label><br>
-        <input type="hidden" name="region_id" value="0"/>
-        <input type="submit" name="btn" value="PARSE"/>
+        <p>{{ form.non_field_errors }}</p>
+        <p>{{ form.docfile.label_tag }}</p>
+        <p>
+            {{ form.docfile.errors }}
+            {{ form.docfile }}
+        </p>
+        <p><input type="submit" name="btn" value="PARSE"/></p>
     </form>
 </body>
 </html>
