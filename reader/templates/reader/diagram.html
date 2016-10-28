@@ -1,89 +1,97 @@
-<!doctype html>
+{% extends 'reader/base.html' %}
 {% load static %}
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="https://cdn.anychart.com/css/latest/anychart-ui.min.css" />
-        <link rel="stylesheet" href="{% static 'css/foundation.min.css' %}"/>
-        <script src="https://cdn.anychart.com/js/7.11.1/anychart-bundle.min.js"></script>
-        <title>Column Chart</title>
-    </head>
-    <body>
+{% block spec_files %}
+    <script src="https://cdn.anychart.com/js/7.11.1/anychart-bundle.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+{% endblock %}
+{% block title %}Chart{% endblock %}
+{% block body %}
+    <div class="container">
         <div class="row">
-            <form action="{% url 'reader:diagram'%}" method="post">
-                <div class="row">
-                    <div class="medium-offset-3 medium-6 columns">
-                        <div class="input-group">
-                            {% csrf_token %}
-                            <select class="input-group-field" name="region_id" >
-                                {% for one in regions %}
-                                    {% if one.id == region.id %}
-                                        <option selected value="{{ one.id }}">{{ one.name }}</option>
-                                    {% else %}
-                                        <option value="{{ one.id }}">{{ one.name }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                            <div class="input-group-button">
-                                <input class="button" type="submit" value="check"/>
+             <div class="col-md-6 col-xs-6 col-md-offset-3 col-xs-offset-3">
+                <form action="{% url 'reader:diagram'%}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-9 col-xs-9">
+                            <div class="form-group">
+                                <select class="form-control" name="region_id" >
+                                    {% for one in regions %}
+                                        {% if one.id == region.id %}
+                                            <option selected value="{{ one.id }}">{{ one.name }}</option>
+                                        {% else %}
+                                            <option value="{{ one.id }}">{{ one.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
+                        <div class="col-md-3 col-xs-3">
+                            <input class="btn btn-success" type="submit" value="check"/>
+                        </div>
                     </div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="container">
                 </div>
-            </form>
+            </div>
         </div>
-        <div id="container">
-        </div>
-        <script>
-            anychart.onDocumentReady(function() {
+    </div>
+    <script>
+        anychart.onDocumentReady(function() {
 
-            // create column chart
-            chart = anychart.column();
+        // create column chart
+        chart = anychart.column();
 
-            // turn on chart animation
-            chart.animation(true);
+        // turn on chart animation
+        chart.animation(true);
 
-            // set chart title text settings
-            chart.title('{{ region.name }}');
+        // set chart title text settings
+        chart.title('{{ region.name }}');
 
-            // create area series with passed data
-            var series = chart.column([
-                {% for country in region.countries_set.all %}
-                ['{{ country.name }}', '{{ country.parameter }}'],
-                {% endfor %}
-            ]);
+        // create area series with passed data
+        var series = chart.column([
+            {% for country in region.countries_set.all %}
+            ['{{ country.name }}', '{{ country.parameter }}'],
+            {% endfor %}
+        ]);
 
-            // set series tooltip settings
-            series.tooltip().titleFormatter(function() {
-                return this.x
-            });
+        // set series tooltip settings
+        series.tooltip().titleFormatter(function() {
+            return this.x
+        });
 
-            series.tooltip().textFormatter(function() {
-                return '$' + parseInt(this.value).toLocaleString()
-            });
-            series.tooltip().position('top').anchor('bottom').offsetX(0).offsetY(5);
+        series.tooltip().textFormatter(function() {
+            return '$' + parseInt(this.value).toLocaleString()
+        });
+        series.tooltip().position('top').anchor('bottom').offsetX(0).offsetY(5);
 
-            // set scale minimum
-            chart.yScale().minimum(0);
+        // set scale minimum
+        chart.yScale().minimum(0);
 
-            // set yAxis labels formatter
-            chart.yAxis().labels().textFormatter("${%Value}");
+        // set yAxis labels formatter
+        chart.yAxis().labels().textFormatter("${%Value}");
 
-            // tooltips position and interactivity settings
-            chart.tooltip().positionMode('point');
-            chart.interactivity().hoverMode('byX');
+        // tooltips position and interactivity settings
+        chart.tooltip().positionMode('point');
+        chart.interactivity().hoverMode('byX');
 
-            // axes titles
-            chart.xAxis().title('Countries');
-            chart.yAxis().title('Parameters');
+        // axes titles
+        chart.xAxis().title('Countries');
+        chart.yAxis().title('Parameters');
 
-            // set container id for the chart
-            chart.container('container');
+        // set container id for the chart
+        chart.container('container');
 
-            // initiate chart drawing
-            chart.draw();
+        // initiate chart drawing
+        chart.draw();
 
-         });
-        </script>
-    </body>
-</html>
+     });
+    </script>
+{% endblock %}
