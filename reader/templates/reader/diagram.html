@@ -35,6 +35,8 @@
 
 
     </div>
+
+    {#  Another container for chart  #}
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -68,7 +70,7 @@
         });
 
         series.tooltip().textFormatter(function() {
-            return '$' + parseInt(this.value).toLocaleString()
+            return parseInt(this.value).toLocaleString()
         });
         series.tooltip().position('top').anchor('bottom').offsetX(0).offsetY(5);
 
@@ -76,7 +78,7 @@
         chart.yScale().minimum(0);
 
         // set yAxis labels formatter
-        chart.yAxis().labels().textFormatter("${%Value}");
+        chart.yAxis().labels().textFormatter("{%Value}");
 
         // tooltips position and interactivity settings
         chart.tooltip().positionMode('point');

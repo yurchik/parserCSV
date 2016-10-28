@@ -6,7 +6,6 @@ from reader.models import Regions, Countries
 
 
 class Utils:
-
     # Clear media directory from previous uploaded file
     @staticmethod
     def clear_media():
@@ -23,9 +22,10 @@ class Utils:
 
     @staticmethod
     def put_all_to_db(file_name):
-        # Open file only for riding
+        # Open file only for reading
         file = open(file_name, 'r')
         file_strings = file.read()
+        # Parse each line with \n delimiter
         parsing_file = file_strings.split('\n')
         current = ''
         region = Regions
@@ -34,10 +34,13 @@ class Utils:
             if len(line) > 0:
                 tmp_line = line.split(',')
                 # Check value type of parameter
+                # for not using first line of csv file
                 try:
                     int(tmp_line[2])
                 except ValueError:
                     continue
+                # check for repeatable name of region
+                # and save only unique
                 if current == tmp_line[0]:
                     country = Countries(region=region, name=tmp_line[1], parameter=tmp_line[2])
                     country.save()
@@ -48,4 +51,3 @@ class Utils:
                     country.save()
                     current = tmp_line[0]
         file.close()
-        return region
